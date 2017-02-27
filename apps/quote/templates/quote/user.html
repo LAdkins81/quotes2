@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+    <style>.quotebox{border: 2px solid black; overflow: scroll; height: 150px; width: 300px;}</style>
+  </head>
+  <body>
+    <a href='{% url 'quotes:quotehome'%}'>Dashboard</a> | <a href='{% url 'quotes:logout' %}'>Logout</a>
+    {% for u in user %}
+    <h3>Username: {{u.name}}</h3>
+    {% endfor %}
+    <h3>Post Count: {{quotecount.count}}</h3>
+    <h3>User's Posts: </h3>
+    <div class='quotebox'>
+    {% for quote in quotes %}
+      <h6>{{quote.author}}</h6>
+      <h6>{{quote.quote}}</h6>
+      {% endfor %}
+    </div>
+  </body>
+</html>

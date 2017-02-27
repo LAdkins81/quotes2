@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quotes</title>
+    <style>.quotebox{border: 2px solid black; overflow: scroll; height: 150px; width: 300px;}</style>
+  </head>
+  <body>
+    <a href='{% url 'quotes:logout' %}'>Logout</a>
+    <h1>Welcome, {{request.session.user}}!</h1>
+
+    <h2>Quotes!</h2>
+    <div class='quotebox'>
+      {% for quote in quotes %}
+      <form action='{% url 'quotes:favorite' %}' method='POST'>
+        {% csrf_token %}
+        <p>{{quote.quote}}<p>
+        <p>{{quote.author}}</p>
+        <p><a href='{% url 'quotes:user' id=quote.user_id %}'>{{quote.user.name}}</a></p>
+        <input hidden name='bob' value='{{quote.id}}'/>
+        <input type='submit' value='add to favs'/>
+      </form>
+        {% endfor %}
+    </div>
+
+    <h2>Your Favorite Quotes</h2>
+    <div class='quotebox'>
+      {% for fav in favorite %}
+      <form action='{% url 'quotes:remove' %}' method='POST'>
+        {% csrf_token %}
+        <p>{{fav.quote.quote}}</p>
+        <p>{{fav.quote.author}}</p>
+        <p>{{fav.quote.user.name}}</p>
+        <input hidden type='text' name='id' value='{{fav.id}}'/>
+        <input type='submit' value='remove'/>
+      </form>
+      {% endfor %}
+    </div>
+    <div>
+      {% if messages %}
+      <ul class='messages'>
+        {% for message in messages %}
+        <li {% if message.tags %} class='{{message.tags}}' {%endif%}>{{message}}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <h2>Contribute A Quote!</h2>
+      <form action='{% url 'quotes:addquote' %}' method='POST'>
+        {% csrf_token %}
+        <label>Quoted By:</label><br>
+        <input type='text' name='author'/><br>
+        <label>Quote</label><br>
+        <textarea name='quote'></textarea><br><br>
+        <input type='submit' value='Submit'/>
+      </form>
+    </div>
+  </body>
+</html>
